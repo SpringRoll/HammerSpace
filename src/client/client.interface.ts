@@ -1,3 +1,9 @@
+import { Rebound } from '../main'
+
 export interface ClientEvents {
-  [key: string]: () => void | undefined;
+  [key: string]: (data?: {}) => void | undefined;
+}
+
+export interface ClientType { 
+  [key: string]: (name: {} | string, data?: string, isRebound?: boolean) => void
 }
