@@ -51,7 +51,7 @@ export class Rebound {
     if (this._isChild) {
       this._randId = 'Rebound_' + (Math.random()).toString();
       this._reciever = parent;
-      this.dispatch({event: 'connected', id: this._randId});
+      this._reciever.postMessage('connected', '*');
     }
     window.addEventListener('message', this._onMessage.bind(this));
   }
@@ -110,8 +110,6 @@ export class Rebound {
       this._randId = 'Rebound_' + (Math.random()).toString();
     }
 
-    e.id = this._randId;
-
     this._reciever.postMessage(e, '*');
   }
 
@@ -123,19 +121,23 @@ export class Rebound {
    * @param e object that contains the info of a postMessage event from rebound
    */
   private _onMessage(e: MessageEvent) {
-    let data = e.data;
+    let predata = e.data;
+    let data = undefined;
 
-    if (typeof data.id === 'undefined' || typeof this._client === 'undefined') {
+    if (typeof predata === 'string' && predata === 'connected') {
+      data = {
+        event: 'connected',
+        value: true
+      };
+    } else {
+      data = JSON.parse(e.data);
+    }
+
+    if (typeof this._client === 'undefined') {
       return;
     }
 
-    if (typeof this._randId === 'undefined' && data.event === 'connected') {
-      this._randId = data.id;
-    }
-
-    if (data.id === this._randId) {
-      this._client.dispatch(data.event, data.value, true);
-    }
+    this._client.dispatch(data.event, data.value, true);
   }
 
   /**
@@ -144,6 +146,7 @@ export class Rebound {
    * @method setID
    */
   public setID: (name: string) => void = this._setID;
+
 
   /**
    * Calls the private method _setClient
