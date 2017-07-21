@@ -123,6 +123,7 @@ export class Rebound {
   private _onMessage(e: MessageEvent) {
     let predata = e.data;
     let data = undefined;
+    let parseData = undefined;
 
     if (typeof predata === 'string' && predata === 'connected') {
       data = {
@@ -130,7 +131,11 @@ export class Rebound {
         value: true
       };
     } else {
-      data = JSON.parse(e.data);
+      parseData = JSON.parse(e.data);
+      data = {
+        event: parseData.type,
+        value: parseData.data
+      };
     }
 
     if (typeof this._client === 'undefined') {
