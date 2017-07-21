@@ -110,7 +110,7 @@ export class Rebound {
       this._randId = 'Rebound_' + (Math.random()).toString();
     }
 
-    this._reciever.postMessage(e, '*');
+    this._reciever.postMessage(JSON.stringify(e), '*');
   }
 
   /**

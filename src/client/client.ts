@@ -82,7 +82,7 @@ export class Client {
     if (typeof this._events[name] !== 'undefined') {
       this._events[name](data);
     } else if (typeof this._rebound !== 'undefined' && !isRebound) {
-      this._rebound.dispatch({event: name, value: data});
+      this._rebound.dispatch({type: name, data: data});
     }
   }
 
