@@ -125,7 +125,11 @@ export class Rebound {
     let data = undefined;
     let parseData = undefined;
 
-    if (typeof predata === 'string' && predata === 'connected') {
+    if (typeof this._client === 'undefined' || typeof predata !== 'string') {
+      return;
+    }
+
+    if (predata === 'connected') {
       data = {
         event: 'connected',
         value: true
@@ -138,9 +142,6 @@ export class Rebound {
       };
     }
 
-    if (typeof this._client === 'undefined') {
-      return;
-    }
 
     this._client.dispatch(data.event, data.value, true);
   }
