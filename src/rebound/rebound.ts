@@ -52,6 +52,9 @@ export class Rebound {
       this._randId = 'Rebound_' + (Math.random()).toString();
       this._reciever = parent;
       this._reciever.postMessage('connected', '*');
+
+      window.addEventListener('focus', this._sendFocus.bind(this, true));
+      window.addEventListener('blur', this._sendFocus.bind(this, false));
     }
     window.addEventListener('message', this._onMessage.bind(this));
   }
@@ -69,8 +72,28 @@ export class Rebound {
       this._iframeId = id;
       this._iframe = (<HTMLIFrameElement> document.getElementById(id));
       this._reciever = this._iframe.contentWindow;
+    }
+  }
 
-      this._iframe.focus();
+  /**
+   * when focusing or bluring the iframe sends an event to springroll saying if
+   * it is focused or blurred
+   * @private
+   * @method _sendFocus
+   * @param focus boolean that specifies if there is focus
+   */
+  private _sendFocus(focus: boolean) {
+    let eventData = {
+      type: 'focus',
+      data: focus
+    };
+
+    this._reciever.postMessage(JSON.stringify(eventData), '*');
+
+    if (!focus) {
+      setTimeout(() => {
+        window.focus();
+      });
     }
   }
 
@@ -100,10 +123,6 @@ export class Rebound {
   private _dispatch(e: ReboundEvent) {
     if (typeof this._reciever === 'undefined') {
       return;
-    }
-
-    if (!this._isChild) {
-      this._reciever.focus();
     }
 
     if (typeof this._randId === 'undefined') {
@@ -141,7 +160,6 @@ export class Rebound {
         value: parseData.data
       };
     }
-
 
     this._client.dispatch(data.event, data.value, true);
   }

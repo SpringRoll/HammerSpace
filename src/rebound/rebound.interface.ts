@@ -7,3 +7,8 @@ export interface ReboundEvent {
 export interface ReboundType {
   [key: string]: (name: {} | string, data?: string) => void;
 }
+
+export interface Doc extends Document {
+  msHidden: boolean,
+  webkitHidden: boolean
+}
