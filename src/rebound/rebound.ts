@@ -97,7 +97,8 @@ export class Rebound {
    * @method _dispatch
    * @param event object that contains event data to be passed with event
    */
-  private _dispatch(e: ReboundEvent) {
+  protected _dispatch(e: ReboundEvent, str?: string) {
+    // TODO: Refactor into Springroll
     if (typeof this._reciever === 'undefined') {
       return;
     }
@@ -112,7 +113,12 @@ export class Rebound {
 
     e.id = this._randId;
 
-    this._reciever.postMessage(e, '*');
+    // If dispatch receives a string, send the string.
+    if (str) {
+      this._reciever.postMessage(str, '*');
+    } else {
+      this._reciever.postMessage(e, '*');
+    }
   }
 
   /**
@@ -157,5 +163,5 @@ export class Rebound {
    * @public
    * @method dispatch
    */
-  public dispatch: (name: ReboundEvent) => void = this._dispatch;
+  public dispatch: (name: ReboundEvent, str?: string) => void = this._dispatch;
 }
