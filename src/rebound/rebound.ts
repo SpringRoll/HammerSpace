@@ -52,7 +52,7 @@ export class Rebound {
    * @property {Object} client
    * @protected
    */
-  protected _client: Client;
+  protected _client: ClientType;
 
   constructor() {
     this._isChild = !window.frames.length;
