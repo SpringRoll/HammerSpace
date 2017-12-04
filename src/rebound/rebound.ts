@@ -22,14 +22,14 @@ export class Rebound {
    * @property {Window} reciever
    * @private
    */
-  private _reciever: Window;
+  protected _reciever: Window;
 
   /**
    * A boolean that tells you if you are inside the iframe or not
    * @property {Boolean} isChild
    * @private
    */
-  private _isChild: boolean;
+  protected _isChild: boolean;
 
   /**
    * A string that contains a random id value used to tell rebound that the
@@ -37,7 +37,7 @@ export class Rebound {
    * @property {String} events
    * @private
    */
-  private _randId: string;
+  protected _randId: string;
 
   /**
    * An object used to keep track of the client instance
@@ -51,6 +51,12 @@ export class Rebound {
     if (this._isChild) {
       this._randId = 'Rebound_' + (Math.random()).toString();
       this._reciever = parent;
+    }
+  }
+
+  //This is because a constructor should only be setting crucial variables.
+  protected _connect() {
+    if (this._isChild) {
       this.dispatch({event: 'connected', id: this._randId});
     }
     window.addEventListener('message', this._onMessage.bind(this));
@@ -164,4 +170,6 @@ export class Rebound {
    * @method dispatch
    */
   public dispatch: (name: ReboundEvent, str?: string) => void = this._dispatch;
+
+  public connect: () => void = this._connect;
 }
