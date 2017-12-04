@@ -19,14 +19,14 @@ export class Rebound {
 
   /**
    * An object used to keep track of the proper window
-   * @property {Window} reciever
+   * @protected {Window} reciever
    * @private
    */
   protected _reciever: Window;
 
   /**
    * A boolean that tells you if you are inside the iframe or not
-   * @property {Boolean} isChild
+   * @protected {Boolean} isChild
    * @private
    */
   protected _isChild: boolean;
@@ -34,17 +34,25 @@ export class Rebound {
   /**
    * A string that contains a random id value used to tell rebound that the
    * events are still from rebound
-   * @property {String} events
-   * @private
+   * @private {String} events
+   * @protected
    */
   protected _randId: string;
 
   /**
-   * An object used to keep track of the client instance
-   * @property {Object} client
+   * A string that contains a random id value used to tell rebound that the
+   * events are still from rebound
+   * @protected {Boolean} events
    * @private
    */
-  private _client: ClientType;
+  protected _isHammerClient: boolean;
+
+  /**
+   * An object used to keep track of the client instance
+   * @property {Object} client
+   * @protected
+   */
+  protected _client: Client;
 
   constructor() {
     this._isChild = !window.frames.length;
@@ -99,7 +107,7 @@ export class Rebound {
    * child of iframe or vise versa and will pass the specified data along with
    * it. Also if there is no random id created it will create on and pass it
    * along
-   * @private
+   * @protected
    * @method _dispatch
    * @param event object that contains event data to be passed with event
    */
@@ -130,11 +138,11 @@ export class Rebound {
   /**
    * if a proper random id is set and client is also setup a dispatch event will
    * be set to client and the proper data will be passed along
-   * @private
+   * @protected
    * @method _onMessage
    * @param e object that contains the info of a postMessage event from rebound
    */
-  private _onMessage(e: MessageEvent) {
+  protected _onMessage(e: MessageEvent) {
     let data = e.data;
 
     if (typeof data.id === 'undefined' || typeof this._client === 'undefined') {
