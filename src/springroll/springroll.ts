@@ -1,4 +1,3 @@
-import { ReboundEvent } from '../rebound/rebound.interface';
 import { Rebound } from '../rebound/rebound';
 
 export class SRRebound extends Rebound {
@@ -27,25 +26,26 @@ export class SRRebound extends Rebound {
     // TODO: Messages from Springroll Container come as JSON, but not as an event object but as a string.
     // I'm using a shorthand statement for readability however if data is not a string then this line will fail.
     let data;
-    // There's two possible outcomes of this function, this variable simple reduces the complexity of the if statement at the end.
+    // There's two possible outcomes of this function, this variable
+    // simple reduces the complexity of the if statement at the end.
     // Here I'm instantiating the variable for later use.
     let sendData;
 
-    if (typeof e === 'object' && e.data == 'connected') {
+    if (typeof e === 'object' && e.data === 'connected') {
       data = {event: 'connected', data: 'connected'};
-    }
-    else if (typeof e === 'object' && typeof e.data !== 'undefined' && e.data !== 'connected') {
+    } else if (typeof e === 'object' && typeof e.data !== 'undefined' && e.data !== 'connected') {
       //Springroll always sends a string as the payload.
       data = JSON.parse(e.data);
     }
 
-    // TODO: This also has to be changed, moved to a function elsewhere to tell Hammerspace that it's not communicating with Hammerspace
+    // TODO: This also has to be changed, moved to a function elsewhere to tell
+    // Hammerspace that it's not communicating with Hammerspace
     if (data.id === 'undefined') {
       this._isHammerClient = false;
     }
 
     // TODO: Return statement should not be here, it should be the first line of code in the function
-    if ( (this._isHammerClient == true) && (typeof data.id === 'undefined' || typeof this._client === 'undefined') ) {
+    if ( (this._isHammerClient) && (typeof data.id === 'undefined' || typeof this._client === 'undefined') ) {
       return;
     }
 
@@ -53,10 +53,9 @@ export class SRRebound extends Rebound {
       this._randId = data.id;
     }
 
-    if (data.id === this._randId && this._isHammerClient == true) {
+    if (data.id === this._randId && this._isHammerClient) {
       sendData = data;
-    }
-    else if (data.event !== 'connected') {
+    } else if (data.event !== 'connected') {
       // Sanitizing the send object to Hammerspace convention, Springroll Container sends different keys.
       sendData = { event: data.type, value: data.data };
     } else if (data.event === 'connected') {
